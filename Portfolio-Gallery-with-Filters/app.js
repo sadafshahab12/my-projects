@@ -46,7 +46,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("searchInput");
   const sortButtons = document.querySelectorAll(".sort-btn");
   const gallery = document.querySelector(".gallery");
+  const items = Array.from(document.querySelectorAll(".item"));
   let currentFilter = "all";
+  let itemsPerLoad = 15;
+  let currentIndexOfShowed = 0;
+
+  function showNextItems() {
+    const nextItems = items.slice(
+      currentIndexOfShowed,
+      currentIndexOfShowed + itemsPerLoad
+    );
+    nextItems.forEach((item) => {
+      item.style.display = "block";
+    });
+    currentIndexOfShowed += itemsPerLoad;
+  }
+  items.forEach((item) => (item.style.display = "none"));
+  showNextItems();
+
+  window.addEventListener("scroll", () => {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 100
+    ) {
+      showNextItems();
+    }
+  });
   const observer = new IntersectionObserver(
     (entries, observer) => {
       entries.forEach((entry, index) => {
