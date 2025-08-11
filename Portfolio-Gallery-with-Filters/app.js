@@ -1,21 +1,23 @@
 const filterButtons = document.querySelectorAll(".filter-btn");
 const items = document.querySelectorAll(".item");
-filterButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    filterButtons.forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
+// filterButtons.forEach((btn) => {
+//   btn.addEventListener("click", () => {
+//     filterButtons.forEach((b) => b.classList.remove("active"));
+//     btn.classList.add("active");
+//     currentFilter = btn.getAttribute("data-filter");
+//     applyFilters();
 
-    // const filter = btn.getAttribute("data-filter");
+//     // const filter = btn.getAttribute("data-filter");
 
-    // items.forEach((item) => {
-    //   if (filter === "all" || item.getAttribute("data-category") === filter) {
-    //     item.style.display = "block";
-    //   } else {
-    //     item.style.display = "none";
-    //   }
-    // });
-  });
-});
+//     // items.forEach((item) => {
+//     //   if (filter === "all" || item.getAttribute("data-category") === filter) {
+//     //     item.style.display = "block";
+//     //   } else {
+//     //     item.style.display = "none";
+//     //   }
+//     // });
+//   });
+// });
 
 const lightBox = document.querySelector(".lightbox");
 const lightboxImg = document.querySelector(".lightbox-img");
@@ -35,11 +37,13 @@ closeBtn.addEventListener("click", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("searchInput");
-
+  const sortButtons = document.querySelectorAll(".sort-btn");
+  const gallery = document.querySelector(".gallery");
   let currentFilter = "all";
   const observer = new IntersectionObserver(
     (entries, observer) => {
       entries.forEach((entry, index) => {
+        // console.log(entries)
         if (entry.isIntersecting) {
           const img = entry.target.querySelector(".lazy-image");
           const overlay = entry.target.querySelector(".blur-overlay");
@@ -59,6 +63,24 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   items.forEach((item) => observer.observe(item));
 
+  //sort function
+  sortButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const sortType = button.getAttribute("data-sort");
+      // console.log(sortType)
+      // console.log(items)
+
+      const sortedItems = Array.from(items).sort((a, b) => {
+        const dateA = new Date(a.getAttribute("data-date"));
+        const dateB = new Date(b.getAttribute("data-date"));
+
+        return sortType === "newest" ? dateB - dateA : dateA - dateB;
+      });
+      // console.log(sortedItems)
+      sortedItems.forEach((item) => gallery.appendChild(item));
+    });
+  });
+
   function applyFilters() {
     const searchTerm = searchInput.value.toLowerCase();
     items.forEach((item) => {
@@ -76,4 +98,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      filterButtons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentFilter = btn.getAttribute("data-filter");
+      applyFilters();
+    });
+  });
+
+  searchInput.addEventListener("input", applyFilters);
 });
