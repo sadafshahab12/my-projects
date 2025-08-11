@@ -35,6 +35,9 @@ body {
 .item {
   overflow: hidden;
   position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 .item img {
   width: 100%;
@@ -44,6 +47,10 @@ body {
 .item:hover img {
   transform: scale(1.1);
 }
+.item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 .lightbox {
   display: none;
   position: fixed;
@@ -51,13 +58,20 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  /* background: rgba(0, 0, 0, 0.8); */
   justify-content: center;
   align-items: center;
+}
+.lightbox-bg {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(15px);
+  background: rgba(0, 0, 0, 0.7);
 }
 .lightbox img {
   max-width: 90%;
   max-height: 80%;
+  z-index: 3;
 }
 .lightbox .close {
   position: absolute;
@@ -70,7 +84,14 @@ body {
 
 .lazy-image {
   filter: blur(15px);
-  transition: filter 0.5s ease;
+  width: 100%;
+  height: auto;
+  display: block;
+  transform: scale(1);
+  transition: filter 0.5s ease, transform 0.5s ease;
+}
+.item:hover .lazy-image {
+  transform: scale(1.05);
 }
 .lazy-image.loaded {
   filter: blur(0);
@@ -84,7 +105,17 @@ body {
   z-index: 2;
 }
 
-.blur-overlay.hidden{
-  opacity: 0;;
+.blur-overlay.hidden {
+  opacity: 0;
   pointer-events: none;
+}
+
+.search-container {
+  margin-bottom: 15px;
+}
+#searchInput {
+  padding: 10px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }

@@ -5,15 +5,15 @@ filterButtons.forEach((btn) => {
     filterButtons.forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
 
-    const filter = btn.getAttribute("data-filter");
+    // const filter = btn.getAttribute("data-filter");
 
-    items.forEach((item) => {
-      if (filter === "all" || item.getAttribute("data-category") === filter) {
-        item.style.display = "block";
-      } else {
-        item.style.display = "none";
-      }
-    });
+    // items.forEach((item) => {
+    //   if (filter === "all" || item.getAttribute("data-category") === filter) {
+    //     item.style.display = "block";
+    //   } else {
+    //     item.style.display = "none";
+    //   }
+    // });
   });
 });
 
@@ -34,21 +34,46 @@ closeBtn.addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  const lazyImages = document.querySelectorAll(".lazy-image");
+  const searchInput = document.getElementById("searchInput");
 
-  const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const img = entry.target;
-        const overlay = img.previousElementSibling;
-        img.src = img.dataset.src;
-        img.onload = () => {
-          img.classList.add("loaded");
-          overlay.classList.add("hidden")
-        };
-        observer.unobserve(img);
+  let currentFilter = "all";
+  const observer = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          const img = entry.target.querySelector(".lazy-image");
+          const overlay = entry.target.querySelector(".blur-overlay");
+          img.src = img.dataset.src;
+          img.onload = () => {
+            img.classList.add("loaded");
+            overlay.classList.add("hidden");
+          };
+          setTimeout(() => {
+            entry.target.classList.add("visible");
+          }, index * 150);
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+  items.forEach((item) => observer.observe(item));
+
+  function applyFilters() {
+    const searchTerm = searchInput.value.toLowerCase();
+    items.forEach((item) => {
+      const category = item.getAttribute("data-category");
+      const altText = item.querySelector("img").alt.toLowerCase();
+
+      const matchesCategory =
+        currentFilter === "all" || category === currentFilter;
+      const matchesSearch = altText.includes(searchTerm);
+
+      if (matchesCategory && matchesSearch) {
+        item.style.display = "block";
+      } else {
+        item.style.display = "none";
       }
     });
-  });
-  lazyImages.forEach((img) => observer.observe(img));
+  }
 });
