@@ -47,10 +47,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const sortButtons = document.querySelectorAll(".sort-btn");
   const gallery = document.querySelector(".gallery");
   const items = Array.from(document.querySelectorAll(".item"));
+  const loader = document.querySelector(".loader");
   let currentFilter = "all";
-  let itemsPerLoad = 15;
+  let itemsPerLoad = 6;
   let currentIndexOfShowed = 0;
+  let filteredItems = [...items]; // filtered + searched ka result
 
+  function renderItems(reset = false) {
+    if (reset) {
+      currentIndex = 0;
+      items.forEach((item) => (item.style.display = "none"));
+    }
+
+    const nextItems = filteredItems.slice(
+      currentIndex,
+      currentIndex + itemsPerLoad
+    );
+    nextItems.forEach((item) => {
+      item.style.display = "block";
+    });
+    currentIndex += itemsPerLoad;
+
+    loader.style.display =
+      currentIndex < filteredItems.length ? "flex" : "none";
+  }
   function showNextItems() {
     const nextItems = items.slice(
       currentIndexOfShowed,
@@ -66,10 +86,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("scroll", () => {
     if (
-      window.innerHeight + window.scrollY >=
-      document.body.offsetHeight - 100
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
+      currentIndexOfShowed < items.length
     ) {
-      showNextItems();
+      loader.style.display = "flex";
+      setTimeout(() => {
+        showNextItems();
+        loader.style.display = "none";
+      }, 800);
     }
   });
   const observer = new IntersectionObserver(
