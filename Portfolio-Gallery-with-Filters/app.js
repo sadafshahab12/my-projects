@@ -22,15 +22,22 @@ const items = document.querySelectorAll(".item");
 const lightBox = document.querySelector(".lightbox");
 const lightboxImg = document.querySelector(".lightbox-img");
 const closeBtn = document.querySelector(".lightbox .close");
-
+const lightboxBg = document.querySelector(".lightbox-bg");
 items.forEach((item) => {
   item.addEventListener("click", () => {
-    const imgSrc = item.querySelector("img").src;
+    const imgSrc = item.querySelector("img").dataset.src;
     lightboxImg.src = imgSrc;
     lightBox.style.display = "flex";
   });
 });
-
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    lightBox.style.display = "none";
+  }
+});
+lightboxBg.addEventListener("click", () => {
+  lightBox.style.display = "none";
+});
 closeBtn.addEventListener("click", () => {
   lightBox.style.display = "none";
 });
@@ -108,5 +115,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  searchInput.addEventListener("input", applyFilters);
+  //   debounce
+  function debounce(fn, delay = 200) {
+    let t;
+    return (...args) => {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+  searchInput.addEventListener("input", debounce(applyFilters, 180));
 });
