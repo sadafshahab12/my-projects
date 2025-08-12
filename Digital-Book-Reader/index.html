@@ -9,14 +9,26 @@
   <body>
     <div class="book-reader">
       <h1>Digital Book Reader</h1>
+      <!-- file input  -->
       <div class="controls top-controls">
         <input type="file" id="file-input" accept="application/pdf" />
+        <span id="filename" class="filename"></span>
       </div>
-      <canvas id="pdf-render"></canvas>
-    </div>
-  </body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js"></script>
+      <!-- navigation control next prev btn , bookmark button page number  -->
 
-  <script src="app.js"></script>
+      <div class="controls">
+        <button id="prevBtn">Prev</button>
+        <button id="nextBtn">Next</button>
+        <button id="bookmarkBtn">Bookmark</button>
+        <span id="pageInfo"> page 0 /0</span>
+      </div>
+      <!-- pdf render area  -->
+      <div class="reader">
+        <canvas id="pdf-render"></canvas>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js"></script>
+    <script src="app.js"></script>
+  </body>
 </html>
