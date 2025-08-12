@@ -1,0 +1,12 @@
+.blur-overlay{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    z-index: 1;
+}
+.blur-overlay.hidden{
+    opacity: 0;
+    pointer-events: none;
+}

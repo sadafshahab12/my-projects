@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="loader.css" />
+    <link rel="stylesheet" href="blur-overlay.css" />
+    <link rel="stylesheet" href="lazy-image.css" />
+  </head>
+  <body>
+    <div class="portfolio">
+      <h1>My Portfolio</h1>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="web design">Web Design</button>
+        <button class="filter-btn" data-filter="graphic design">
+          Graphic Design
+        </button>
+        <button class="filter-btn" data-filter="ui ux design">
+          UI/UX Design
+        </button>
+      </div>
+      <div class="gallery">
+        <div class="gallery-items" data-category="web design">
+          <div class="blur-overlay"></div>
+          <img
+            data-src="./images/2.jpg"
+            src="./images/2.jpg"
+            alt="web design"
+            loading="lazy"
+            class="lazy-image"
+          />
+        </div>
+      </div>
+      <div class="loader">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </body>
+  <script src="app.js"></script>
+</html>
