@@ -1,11 +1,5 @@
 const filterButtons = document.querySelectorAll(".filter-btn");
 const items = document.querySelectorAll(".item");
-// filterButtons.forEach((btn) => {
-//   btn.addEventListener("click", () => {
-//     filterButtons.forEach((b) => b.classList.remove("active"));
-//     btn.classList.add("active");
-//     currentFilter = btn.getAttribute("data-filter");
-//     applyFilters();
 
 //     // const filter = btn.getAttribute("data-filter");
 
@@ -55,24 +49,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderItems(reset = false) {
     if (reset) {
-      currentIndex = 0;
+      currentIndexOfShowed = 0;
       items.forEach((item) => (item.style.display = "none"));
     }
 
     const nextItems = filteredItems.slice(
-      currentIndex,
-      currentIndex + itemsPerLoad
-    );
-    nextItems.forEach((item) => {
-      item.style.display = "block";
-    });
-    currentIndex += itemsPerLoad;
-
-    loader.style.display =
-      currentIndex < filteredItems.length ? "flex" : "none";
-  }
-  function showNextItems() {
-    const nextItems = items.slice(
       currentIndexOfShowed,
       currentIndexOfShowed + itemsPerLoad
     );
@@ -80,9 +61,22 @@ document.addEventListener("DOMContentLoaded", () => {
       item.style.display = "block";
     });
     currentIndexOfShowed += itemsPerLoad;
+
+    loader.style.display =
+      currentIndexOfShowed < filteredItems.length ? "flex" : "none";
   }
-  items.forEach((item) => (item.style.display = "none"));
-  showNextItems();
+  // function showNextItems() {
+  //   const nextItems = items.slice(
+  //     currentIndexOfShowed,
+  //     currentIndexOfShowed + itemsPerLoad
+  //   );
+  //   nextItems.forEach((item) => {
+  //     item.style.display = "block";
+  //   });
+  //   currentIndexOfShowed += itemsPerLoad;
+  // }
+  // items.forEach((item) => (item.style.display = "none"));
+  // showNextItems();
 
   window.addEventListener("scroll", () => {
     if (
@@ -91,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       loader.style.display = "flex";
       setTimeout(() => {
-        showNextItems();
+        renderItems();
         loader.style.display = "none";
       }, 800);
     }
@@ -139,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function applyFilters() {
     const searchTerm = searchInput.value.toLowerCase();
-    items.forEach((item) => {
+    filteredItems = items.filter((item) => {
       const category = item.getAttribute("data-category");
       const altText = item.querySelector("img").alt.toLowerCase();
 
@@ -147,12 +141,9 @@ document.addEventListener("DOMContentLoaded", () => {
         currentFilter === "all" || category === currentFilter;
       const matchesSearch = altText.includes(searchTerm);
 
-      if (matchesCategory && matchesSearch) {
-        item.style.display = "block";
-      } else {
-        item.style.display = "none";
-      }
+      return matchesCategory && matchesSearch;
     });
+    renderItems(true);
   }
 
   filterButtons.forEach((btn) => {
@@ -172,5 +163,8 @@ document.addEventListener("DOMContentLoaded", () => {
       t = setTimeout(() => fn.apply(this, args), delay);
     };
   }
-  searchInput.addEventListener("input", debounce(applyFilters, 180));
+  searchInput.addEventListener(
+    "input",
+    debounce(() => applyFilters(), 180)
+  );
 });
